@@ -1,47 +1,38 @@
-# F-Droid Repository
+# The Viber F-Droid Repository
 
-This repository is initialized and managed using [`fdroidserver`](https://f-droid.org/docs/Setup_an_F-Droid_App_Repo).
+Official [F-Droid](https://f-droid.org/) repository for applications by [The Viber](https://github.com/theviber707).
 
-## Repository Structure
+---
 
-- [`config.yml`](config.yml): Configuration file for the repository (name, description, base URL, signing keystore, etc.).
-- [`repo/`](repo/): Directory containing APKs, icons, metadata, and generated index files (`index-v1.jar`, `index-v2.json`, etc.).
-- [`keystore.p12`](keystore.p12): PKCS#12 keystore used to sign repository index files (kept private; ignored in `.gitignore`).
-- [`shell.nix`](shell.nix): Nix shell providing `fdroidserver` and `jdk` without manual system installs.
+## 📲 Add to F-Droid
 
-## Repository Signing Key Fingerprint
+You can add this repository to **F-Droid**, **Droid-ify**, **Neo Store**, or any compatible client.
 
-- **SHA-256 Fingerprint**: `02 34 BA 18 CD 1E 75 21 83 A6 C0 B6 F5 36 2D F8 E5 7C 0D BD 35 59 31 E4 DA 47 7A AB 19 26 74 3C`
+### Repository Details
 
-## Workflow
+* **Repository URL**:
+  ```text
+  https://theviber707.github.io/fdroid-repo/repo
+  ```
 
-### 1. Enter the Nix Shell (Optional)
-To enter an interactive shell with `fdroid` available:
-```bash
-nix-shell
-```
+* **Signing Key Fingerprint (SHA-256)**:
+  ```text
+  02 34 BA 18 CD 1E 75 21 83 A6 C0 B6 F5 36 2D F8 E5 7C 0D BD 35 59 31 E4 DA 47 7A AB 19 26 74 3C
+  ```
 
-### 2. Adding Apps
-1. Place APK files directly into the [`repo/`](repo/) directory:
-   ```bash
-   cp /path/to/app.apk repo/
-   ```
-2. Update repository indexes and extract APK metadata:
-   ```bash
-   nix-shell --run "fdroid update -c"
-   ```
+* **Web Landing Page & QR Code**:
+  Scan the QR code directly at [theviber707.github.io/fdroid-repo](https://theviber707.github.io/fdroid-repo/).
 
-### 3. Serving Locally for Testing
-You can test the repository over your local network:
-```bash
-python3 -m http.server 8000
-```
-Then on your Android device (connected to the same Wi-Fi), add the repository in the F-Droid app:
-```
-http://<YOUR-IP>:8000/repo
-```
-and verify the fingerprint when prompted.
+---
 
-### 4. Hosting Online
-1. Edit [`config.yml`](config.yml) to set your public `repo_url`, `repo_name`, and `repo_description`.
-2. Host the contents of this folder (or specifically `repo/`) on GitHub Pages, GitLab Pages, an S3 bucket, or an HTTP server (Nginx/Apache).
+## 📦 Available Apps
+
+| Application | Description | Source |
+| :--- | :--- | :--- |
+| **[Roam Agenda](https://github.com/theviber707/roamAgenda)** | Native Android task manager for Org Mode and Org-Roam with Jetpack Compose. | [theviber707/roamAgenda](https://github.com/theviber707/roamAgenda) |
+
+---
+
+## 🔄 Automated Updates
+
+This repository is maintained automatically. Whenever a new version tag (e.g. `v1.0.0`) is published in an application's source repository, GitHub Actions compiles the signed release APK, updates the repository index, and deploys it here.

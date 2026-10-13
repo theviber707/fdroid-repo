@@ -48,7 +48,7 @@ jobs:
 
       - name: Update F-Droid repository index
         run: |
-          nix-shell --run "fdroid update -c"
+          nix shell nixpkgs#fdroidserver nixpkgs#jdk --command fdroid update -c
 
       - name: Cleanup keystore
         if: always()
