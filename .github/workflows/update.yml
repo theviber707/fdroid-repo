@@ -1,0 +1,69 @@
+name: Update F-Droid Repository
+
+on:
+  repository_dispatch:
+    types: [update-repo]
+  workflow_dispatch:
+  schedule:
+    # Optional scheduled poll every 6 hours to pick up any untriggered releases
+    - cron: '0 */6 * * *'
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download release APK from roamAgenda
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.client_payload.tag }}"
+          if [ -n "$TAG" ]; then
+            echo "Downloading release APK for tag $TAG..."
+            gh release download "$TAG" --repo theviber707/roamAgenda --pattern "*.apk" --dir repo/ --clobber
+          else
+            echo "Checking and downloading latest release APK..."
+            gh release download --repo theviber707/roamAgenda --pattern "*.apk" --dir repo/ --clobber || echo "No releases found yet."
+          fi
+
+      - name: Restore F-Droid signing keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.FDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::Secret FDROID_KEYSTORE_BASE64 is not set! Please add it to repository secrets."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > keystore.p12
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+
+      - name: Update F-Droid repository index
+        run: |
+          nix-shell --run "fdroid update -c"
+
+      - name: Cleanup keystore
+        if: always()
+        run: |
+          rm -f keystore.p12
+
+      - name: Commit and push updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add repo/ metadata/
+          if git diff --staged --quiet; then
+            echo "No repository changes to commit."
+          else
+            TAG="${{ github.event.client_payload.tag }}"
+            git commit -m "chore(repo): update apps ${TAG:+for $TAG}"
+            git push origin main
+          fi
