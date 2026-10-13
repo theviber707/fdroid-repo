@@ -1,0 +1,7 @@
+# Private signing keys & secrets
+keystore.p12
+
+# Temporary and cache directories
+tmp/
+.cache/
+.fdroid-build-logs/

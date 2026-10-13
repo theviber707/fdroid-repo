@@ -1,0 +1,10 @@
+AuthorName: theviber707
+Categories:
+  - Productivity
+CurrentVersion: 1.0.0
+CurrentVersionCode: 1
+IssueTracker: https://github.com/theviber707/roamAgenda/issues
+Name: Roam Agenda
+SourceCode: https://github.com/theviber707/roamAgenda
+Summary: '"Emacs From Scratch"-like Org Agenda Setup with Jetpack Compose'
+WebSite: https://github.com/theviber707/roamAgenda
