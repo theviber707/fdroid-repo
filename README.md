@@ -29,6 +29,7 @@ You can add this repository to **F-Droid**, **Droid-ify**, **Neo Store**, or any
 
 | Application | Description | Source |
 | :--- | :--- | :--- |
+| **[ListenTube](https://github.com/theviber707/listentube)** | YouTube Music player for ListenBrainz. | [theviber707/listentube](https://github.com/theviber707/listentube) |
 | **[Roam Agenda](https://github.com/theviber707/roamAgenda)** | Native Android task manager for Org Mode and Org-Roam with Jetpack Compose. | [theviber707/roamAgenda](https://github.com/theviber707/roamAgenda) |
 
 ---

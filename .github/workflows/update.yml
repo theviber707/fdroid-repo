@@ -20,18 +20,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download release APK from roamAgenda
+      - name: Download release APKs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          APPS=(
+            "theviber707/roamAgenda"
+            "theviber707/listentube"
+          )
           TAG="${{ github.event.client_payload.tag }}"
-          if [ -n "$TAG" ]; then
-            echo "Downloading release APK for tag $TAG..."
-            gh release download "$TAG" --repo theviber707/roamAgenda --pattern "*.apk" --dir repo/ --clobber
-          else
-            echo "Checking and downloading latest release APK..."
-            gh release download --repo theviber707/roamAgenda --pattern "*.apk" --dir repo/ --clobber || echo "No releases found yet."
-          fi
+          REPO="${{ github.event.client_payload.repo }}"
+
+          for APP_REPO in "${APPS[@]}"; do
+            if [ -n "$REPO" ] && [ "$REPO" != "$APP_REPO" ]; then
+              continue
+            fi
+            if [ -n "$TAG" ]; then
+              echo "Checking $APP_REPO for release $TAG..."
+              gh release download "$TAG" --repo "$APP_REPO" --pattern "*.apk" --dir repo/ --clobber || echo "Tag $TAG not found in $APP_REPO."
+            fi
+            echo "Checking and downloading latest release APK from $APP_REPO..."
+            gh release download --repo "$APP_REPO" --pattern "*.apk" --dir repo/ --clobber || echo "No releases found in $APP_REPO yet."
+          done
 
       - name: Restore F-Droid signing keystore
         env:
